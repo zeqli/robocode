@@ -1,0 +1,35 @@
+
+debug: false
+
+
+spring:
+  profiles:
+    active: dev
+
+---
+# Development Environment
+spring:
+  profiles: dev
+
+
+server:
+  port: 8080
+
+
+---
+# Test Environment
+spring:
+  profiles: test
+
+server:
+  port: 8080
+
+
+---
+# Production Environment
+
+spring:
+  profiles: pro
+
+server:
+  port: 8080
