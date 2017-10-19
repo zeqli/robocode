@@ -1,0 +1,14 @@
+<div>
+  <div class="form-group">
+    <button type="button" (click)="saveRobot()" [disabled]="isSubmit" >Save Robot</button>
+  </div>
+  <div>
+    <label>{{responseMessage}}</label>
+  </div>
+  <div>
+    <codemirror [(ngModel)]="content" [config]="config"></codemirror>
+  </div>
+
+</div>
+
+

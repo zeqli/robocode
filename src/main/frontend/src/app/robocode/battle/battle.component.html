@@ -1,0 +1,124 @@
+<div id="battle-panel" class="container">
+  <!-- Robots Selection Tab -->
+  <div class="row">
+    <div id="lineup">
+      <div>
+        <h1>Robots</h1>
+        <hr>
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <br>
+          <table>
+            <tr>
+              <!-- User Options -->
+              <td width="250px">
+                <label>User</label>
+                <select class="form-control" multiple name="domain_name" id="domain_name"
+                        [(ngModel)]="selectedUsers"
+                        (ngModelChange)="userChanges($event)">
+                  <option *ngFor="let user of userOptions" [value]="user">{{user}}</option>
+                </select>
+              </td>
+
+              <!-- Package Options -->
+              <td width="250px">
+                <label>Package</label>
+                <select class="form-control" multiple name="package" id="package"
+                        [(ngModel)]="selectedPackage"
+                        (ngModelChange)="packageChange($event)">
+                  <option *ngFor="let package of packageOptions" [value]="package">{{package}}</option>
+                </select>
+              </td>
+
+
+              <!-- Robot Options -->
+              <td width="250px">
+                <label>Robots</label>
+                <select class="form-control" multiple name="displayed-robots"
+                        [(ngModel)]="selectedRobots">
+                  <option *ngFor="let r of robotOptions" [value]="r">{{r.robotId}}</option>
+                </select>
+
+              </td>
+              <td width="100px" align="center">
+                <button type="button" (click)="addToChosen()">Add</button>
+              </td>
+              <td width="250px">
+                <label>Selected Robots</label>
+                <select class="form-control" multiple name="selected-robots"
+                        (ngModelChange)="selectedRobotsChange($event)">
+                  <option *ngFor="let r of addedRobots" [value]="r">{{r.robotId}}</option>
+                </select>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Battle Properties Option Tab -->
+  <div class="row">
+    <div id="rules">
+      <div>
+        <h1>Rules</h1>
+        <hr>
+      </div>
+
+      <table>
+        <tr>
+          <td>
+            Number of Rounds: <br> (integer > 0)
+          </td>
+          <td>
+            <input type="text" name="numRounds" value="10">
+          </td>
+        </tr>
+        <tr>
+          <td width="200px">Gun Cooling Rate: <br> (>0 and <=0.7)</td>
+          <td>
+            <input type="text" name="gunCool" id="gunCool" value="0.1"></td>
+        </tr>
+        <tr>
+          <td>
+            Inactivity Time: <br> (integer >= 0)
+          </td>
+          <td><input type="text" name="inactivity" value="450"></td>
+        </tr>
+        <tr>
+          <td>
+            Sentry Border Size: <br> (integer >= 50)
+          </td>
+          <td><input type="text" name="sentryBorder" id="sentryBorder" value="100"></td>
+        </tr>
+        <tr>
+          <td>
+            Hide Enemy Names:
+          </td>
+          <td><input type="checkbox" name="enemy" value="enemy"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header">
+          <i class="fa fa-play"></i>
+          <button type="button"
+                  [disabled]="addedRobots == null || addedRobots.length == 0"
+                  name="battlebutton" id="battlebutton"
+                  (click)="startBattle()">Play Battle
+          </button>
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
