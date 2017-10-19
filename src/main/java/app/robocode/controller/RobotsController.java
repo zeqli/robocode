@@ -3,10 +3,13 @@ package app.robocode.controller;
 import app.dao.IRobotDAO;
 import app.entity.Robot;
 import app.robocode.vo.SimpleRobot;
+import app.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class RobotsController {
@@ -26,10 +29,16 @@ public class RobotsController {
 
 
     @RequestMapping(value = "api/v1/robocode/robot/new/save", method = RequestMethod.POST)
-    public String saveNewRobot(@RequestBody SimpleRobot robot) {
+    public Map<String, Object> saveNewRobot(@RequestBody SimpleRobot robot) {
         Robot robotDto = new Robot(robot.getPackageId(), robot.getRobotId(), robot.getAccess(), robot.getRobotSrcCode());
+        robotDto.setUserId("User");
+        robotDto.setFilePath("C:/robocode/robots/" + robot.getPackageId() + "/" + robot.getRobotId() + ".java");
+        robotDto.setCreatedDate(DateUtil.getDateNowAsString());
+        robotDto.setUpdatedDate(DateUtil.getDateNowAsString());
         this.robotDAO.addRobot(robotDto);
-        return "Success";
+        Map<String, Object> res = new HashMap<>();
+        res.put("response", "success");
+        return res;
     }
 
     @RequestMapping(value = "api/v1/robocode/robot/save", method = RequestMethod.POST)

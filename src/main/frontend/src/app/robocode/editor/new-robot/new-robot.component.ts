@@ -65,7 +65,7 @@ export class NewRobotComponent implements OnInit {
     newRobot.robotSrcCode = this.content;
 
     this.robocodeService.saveNewRobot(newRobot).subscribe(res => {
-      this.responseMessage = res;
+      this.responseMessage = res.response;
     });
   }
 }
