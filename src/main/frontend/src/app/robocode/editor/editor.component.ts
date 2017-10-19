@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {RobocodeService} from "../robocode.service";
-import {Domain, RobotModel, RobotViewModel, SimpleRobot} from "../robot.model";
+import {Domain, Robot, RobotModel, RobotViewModel, SimpleRobot} from "../robot.model";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import * as _ from 'underscore';
 
@@ -12,62 +12,87 @@ import * as _ from 'underscore';
 })
 export class EditorComponent implements OnInit {
 
-  users: string[];
-  packages: string[];
-  robotName: string;
+  allRobots: Robot[];
 
-  userName: string;
-  packageName: string;
+  userOptions: string[];
+  selectedUsers: string;
 
-  viewModel: RobotViewModel;
+  packageOptions: string[];
+  selectedPackage: string;
 
-  domainMap: {};
+  robotOptions: Robot[];
+  selectedRobots: Robot;
 
 
   constructor(
     private robocodeService: RobocodeService,
-    private router: Router) { }
+    private router: Router
+  ) {
+    this.allRobots = [];
+
+
+    this.userOptions = [];
+    this.selectedUsers = "";
+
+    this.packageOptions = [];
+    this.selectedPackage = "";
+
+    this.robotOptions = [];
+    this.selectedRobots = null;
+  }
 
   ngOnInit() {
-
-
     this.robocodeService.getAllRobots().subscribe(data => {
-      this.viewModel = new RobotViewModel();
-      this.viewModel.domains = [];
+      this.allRobots = data;
 
-      this.domainMap = {};
-      data.forEach(value => {
-        let userId = value.userID;
-        let packageId: string = value.packageID;
-        if (this.domainMap[userId] != null) {
-          this.domainMap[userId].packages.push(packageId);
-        } else {
-          this.domainMap[userId] = {};
-          this.domainMap[userId].name = userId;
-          this.domainMap[userId].packages = [packageId];
-        }
+      let userOptionsUnique = [];
+      this.allRobots.forEach(robot => {
+        userOptionsUnique.push(robot.userId);
       });
+      userOptionsUnique = _.uniq(userOptionsUnique);
+      this.userOptions = userOptionsUnique;
+    });
 
-      this.viewModel.domains = [];
-      this.users = [];
-      Object.keys(this.domainMap).forEach(key => {
-        this.domainMap[key].packages = _.uniq(this.domainMap[key].packages);
-        let domain = new Domain(this.domainMap[key].name, this.domainMap[key].packages);
-        this.viewModel.domains.push(domain);
-        this.users.push(this.domainMap[key].name);
-      });
+  }
+
+  userChanges(newUsers) {
+    console.log(newUsers);
+
+    let packageOptionsRaw = [];
+    this.allRobots.forEach(robot => {
+      if (newUsers == robot.userId) {
+        packageOptionsRaw.push(robot.packageId);
+      }
+    });
+
+    let packageOptionsUnique = _.uniq(packageOptionsRaw);
+    this.packageOptions = packageOptionsUnique;
+
+  }
+
+  packageChange(newObj) {
+    console.log(newObj);
+
+    this.robotOptions = _.filter(this.allRobots, (r) => {
+      if (this.selectedUsers == r.userId && this.selectedPackage == r.packageId) {
+        return true;
+      } else {
+        return false;
+      }
     });
   }
 
-  /**
-   *
-   * @param {String} value
-   */
-  onSelectUser(value: string) {
-    this.packages = this.domainMap[value].packages;
+
+  robotChange(newRobot) {
+    console.log(newRobot);
+    console.log(this.robotOptions);
+
   }
 
+
+
   onSubmit() {
-    this.router.navigate(["robocode/edit/new", this.packageName, this.robotName]);
+
+    this.router.navigate(["robocode/edit", this.selectedRobots.id]);
   }
 }

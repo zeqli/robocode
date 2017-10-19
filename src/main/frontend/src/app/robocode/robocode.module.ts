@@ -15,6 +15,13 @@ import { LegacyRobotComponent } from './editor/legacy-robot/legacy-robot.compone
     FormsModule,
     CodemirrorModule
   ],
-  declarations: [RobocodeComponent, CreateComponent, EditorComponent, BattleComponent, NewRobotComponent, LegacyRobotComponent]
+  declarations: [
+    RobocodeComponent,
+    CreateComponent,
+    EditorComponent,
+    BattleComponent,
+    NewRobotComponent,
+    LegacyRobotComponent
+  ]
 })
 export class RobocodeModule { }

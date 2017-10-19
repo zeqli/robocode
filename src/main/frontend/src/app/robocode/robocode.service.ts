@@ -60,6 +60,11 @@ export class RobocodeService {
   }
 
 
+  compileRobot(robot: Robot): Observable<any> {
+    return this.http.get(this.baseUrl + 'robot/' + robot.id + "/compile")
+      .map(res => res.json());
+  }
+
   generateRobotStub(packageName: string, robotName: string){
     robotName = capitalize(robotName);
     return `

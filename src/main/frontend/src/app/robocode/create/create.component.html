@@ -1,43 +1,48 @@
-<h2>New Robot</h2>
-
-<form #robotForm="ngForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="user-name">Select User</label>
-    <select class="form-control" id="user-name" name="user-name"
-            #selectUserElem
-            required
-            [(ngModel)]="userName"
-            (change)="onSelectUser(selectUserElem.value)">
-      <option value="">Select User</option>
-      <option *ngFor="let user of users" [value]="user">{{user}}</option>
-    </select>
-  </div>
+<div class="container">
 
 
-  <div class="form-group">
-    <label for="package-name">Select Package</label>
-    <select class="form-control" id="package-name" name="package-name"
-            required
-            #selectPackageElem
-            [(ngModel)]="packageName">
-      <option value="">Select Package</option>
-      <option *ngFor="let package of packages" [value]="package">{{package}}</option>
-    </select>
-  </div>
+  <h2>New Robot</h2>
+
+  <form #robotForm="ngForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="user-name">Select User</label>
+      <select class="form-control" id="user-name" name="user-name"
+              #selectUserElem
+              required
+              [(ngModel)]="userName"
+              (change)="onSelectUser(selectUserElem.value)">
+        <option value="">Select User</option>
+        <option *ngFor="let user of users" [value]="user">{{user}}</option>
+      </select>
+    </div>
 
 
-  <div class="form-group" >
-    <p>Enter Robot Name</p>
-    <p>Example: MyFirstRobot. Must not contain spaces.</p>
-    <label>Robot Name</label>
-    <input class="form-control" type="text"
-           name="robot_name" placeholder="Please enter a robot name"
-           required
-           [(ngModel)]="robotName" >
-  </div>
+    <div class="form-group">
+      <label for="package-name">Select Package</label>
+      <select class="form-control" id="package-name" name="package-name"
+              required
+              #selectPackageElem
+              [(ngModel)]="packageName">
+        <option value="">Select Package</option>
+        <option *ngFor="let package of packages" [value]="package">{{package}}</option>
+      </select>
+    </div>
 
-  <div class="form-group">
-    <button class="btn btn-success" type="submit" [disabled]="!robotForm.form.valid">Next</button>
-  </div>
 
-</form>
+    <div class="form-group">
+      <p>Enter Robot Name</p>
+      <p>Example: MyFirstRobot. Must not contain spaces.</p>
+      <label>Robot Name</label>
+      <input class="form-control" type="text"
+             name="robot_name" placeholder="Please enter a robot name"
+             required
+             [(ngModel)]="robotName">
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-success" type="submit" [disabled]="!robotForm.form.valid">Next</button>
+    </div>
+
+  </form>
+
+</div>

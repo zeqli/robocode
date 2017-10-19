@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Robot, RobotModel, SimpleRobot} from "../../robot.model";
 import {RobocodeService} from "../../robocode.service";
 import {ActivatedRoute} from "@angular/router";
@@ -6,7 +6,8 @@ import {ActivatedRoute} from "@angular/router";
 @Component({
   selector: 'app-legacy-robot',
   templateUrl: './legacy-robot.component.html',
-  styleUrls: ['./legacy-robot.component.css']
+  styleUrls: ['./legacy-robot.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LegacyRobotComponent implements OnInit {
 
@@ -48,21 +49,29 @@ export class LegacyRobotComponent implements OnInit {
 
     this.robocodeService.getRobotById(this.id).subscribe(data => {
       this.robot = new Robot(data);
+      this.content = this.robot.robotSrcCode;
     });
 
 
-    this.content = this.robot.robotSrcCode;
   }
 
 
   saveRobot() {
-    this.isSubmit = true;
 
     this.robot.robotSrcCode = this.content;
-
+    this.responseMessage = "";
     this.robocodeService.saveLegacyRobot(this.robot).subscribe(res => {
-      this.responseMessage = res;
+      this.responseMessage = res.response;
     });
+  }
+
+
+  compileRobot() {
+    this.responseMessage = "";
+    this.robocodeService.compileRobot(this.robot).subscribe(res => {
+      this.responseMessage = res.response;
+    });
+
   }
 
 

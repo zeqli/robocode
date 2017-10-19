@@ -37,7 +37,7 @@
                 <label>Robots</label>
                 <select class="form-control" multiple name="displayed-robots"
                         [(ngModel)]="selectedRobots">
-                  <option *ngFor="let r of robotOptions" [value]="r">{{r.robotId}}</option>
+                  <option *ngFor="let r of robotOptions" [ngValue]="r">{{r.robotId}}</option>
                 </select>
 
               </td>
@@ -48,7 +48,7 @@
                 <label>Selected Robots</label>
                 <select class="form-control" multiple name="selected-robots"
                         (ngModelChange)="selectedRobotsChange($event)">
-                  <option *ngFor="let r of addedRobots" [value]="r">{{r.robotId}}</option>
+                  <option *ngFor="let r of addedRobots" [ngValue]="r">{{r.robotId}}</option>
                 </select>
               </td>
             </tr>

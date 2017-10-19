@@ -3,6 +3,7 @@ package app.dao;
 import app.entity.DomainInfo;
 import app.entity.Robot;
 import app.exception.RobotNotFoundException;
+import app.utils.DateUtil;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,9 +58,10 @@ public class RobotDAO implements IRobotDAO {
         updatedRobot.setAccess(robot.getAccess());
         updatedRobot.setFilePath(robot.getFilePath());
         updatedRobot.setCreatedDate(robot.getCreatedDate());
-        updatedRobot.setUpdatedDate(robot.getUpdatedDate());
+        updatedRobot.setUpdatedDate(DateUtil.getDateNowAsString());
         updatedRobot.setRobotSrcCode(robot.getRobotSrcCode());
         updatedRobot.setBlob(robot.getBlob());
+        robotRepository.save(updatedRobot);
         return updatedRobot;
     }
 

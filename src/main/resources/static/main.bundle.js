@@ -51,7 +51,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var appRoutes = [
     { path: 'robocode', component: __WEBPACK_IMPORTED_MODULE_3__robocode_robocode_component__["a" /* RobocodeComponent */] },
     { path: 'robocode/create', component: __WEBPACK_IMPORTED_MODULE_7__robocode_create_create_component__["a" /* CreateComponent */] },
-    { path: 'robocode/edit/', component: __WEBPACK_IMPORTED_MODULE_6__robocode_editor_editor_component__["a" /* EditorComponent */] },
+    { path: 'robocode/edit', component: __WEBPACK_IMPORTED_MODULE_6__robocode_editor_editor_component__["a" /* EditorComponent */] },
     { path: 'robocode/edit/:id', component: __WEBPACK_IMPORTED_MODULE_9__robocode_editor_legacy_robot_legacy_robot_component__["a" /* LegacyRobotComponent */] },
     { path: 'robocode/edit/new/:package/:robotName', component: __WEBPACK_IMPORTED_MODULE_8__robocode_editor_new_robot_new_robot_component__["a" /* NewRobotComponent */] },
     { path: 'robocode/battle', component: __WEBPACK_IMPORTED_MODULE_5__robocode_battle_battle_component__["a" /* BattleComponent */] },
@@ -277,7 +277,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/robocode/battle/battle.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"battle-panel\" class=\"container\">\n  <!-- Robots Selection Tab -->\n  <div class=\"row\">\n    <div id=\"lineup\">\n      <div>\n        <h1>Robots</h1>\n        <hr>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"input-group\">\n          <br>\n          <table>\n            <tr>\n              <!-- User Options -->\n              <td width=\"250px\">\n                <label>User</label>\n                <select class=\"form-control\" multiple name=\"domain_name\" id=\"domain_name\"\n                        [(ngModel)]=\"selectedUsers\"\n                        (ngModelChange)=\"userChanges($event)\">\n                  <option *ngFor=\"let user of userOptions\" [value]=\"user\">{{user}}</option>\n                </select>\n              </td>\n\n              <!-- Package Options -->\n              <td width=\"250px\">\n                <label>Package</label>\n                <select class=\"form-control\" multiple name=\"package\" id=\"package\"\n                        [(ngModel)]=\"selectedPackage\"\n                        (ngModelChange)=\"packageChange($event)\">\n                  <option *ngFor=\"let package of packageOptions\" [value]=\"package\">{{package}}</option>\n                </select>\n              </td>\n\n\n              <!-- Robot Options -->\n              <td width=\"250px\">\n                <label>Robots</label>\n                <select class=\"form-control\" multiple name=\"displayed-robots\"\n                        [(ngModel)]=\"selectedRobots\">\n                  <option *ngFor=\"let r of robotOptions\" [value]=\"r\">{{r.robotId}}</option>\n                </select>\n\n              </td>\n              <td width=\"100px\" align=\"center\">\n                <button type=\"button\" (click)=\"addToChosen()\">Add</button>\n              </td>\n              <td width=\"250px\">\n                <label>Selected Robots</label>\n                <select class=\"form-control\" multiple name=\"selected-robots\"\n                        (ngModelChange)=\"selectedRobotsChange($event)\">\n                  <option *ngFor=\"let r of addedRobots\" [value]=\"r\">{{r.robotId}}</option>\n                </select>\n              </td>\n            </tr>\n          </table>\n        </div>\n      </div>\n    </div>\n\n  </div>\n\n\n  <!-- Battle Properties Option Tab -->\n  <div class=\"row\">\n    <div id=\"rules\">\n      <div>\n        <h1>Rules</h1>\n        <hr>\n      </div>\n\n      <table>\n        <tr>\n          <td>\n            Number of Rounds: <br> (integer > 0)\n          </td>\n          <td>\n            <input type=\"text\" name=\"numRounds\" value=\"10\">\n          </td>\n        </tr>\n        <tr>\n          <td width=\"200px\">Gun Cooling Rate: <br> (>0 and <=0.7)</td>\n          <td>\n            <input type=\"text\" name=\"gunCool\" id=\"gunCool\" value=\"0.1\"></td>\n        </tr>\n        <tr>\n          <td>\n            Inactivity Time: <br> (integer >= 0)\n          </td>\n          <td><input type=\"text\" name=\"inactivity\" value=\"450\"></td>\n        </tr>\n        <tr>\n          <td>\n            Sentry Border Size: <br> (integer >= 50)\n          </td>\n          <td><input type=\"text\" name=\"sentryBorder\" id=\"sentryBorder\" value=\"100\"></td>\n        </tr>\n        <tr>\n          <td>\n            Hide Enemy Names:\n          </td>\n          <td><input type=\"checkbox\" name=\"enemy\" value=\"enemy\"></td>\n        </tr>\n      </table>\n    </div>\n  </div>\n</div>\n\n\n<div class=\"container\">\n  <div id=\"page-wrapper\">\n    <div class=\"row\">\n      <div class=\"col-lg-12\">\n        <h1 class=\"page-header\">\n          <i class=\"fa fa-play\"></i>\n          <button type=\"button\"\n                  [disabled]=\"addedRobots == null || addedRobots.length == 0\"\n                  name=\"battlebutton\" id=\"battlebutton\"\n                  (click)=\"startBattle()\">Play Battle\n          </button>\n        </h1>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div id=\"battle-panel\" class=\"container\">\n  <!-- Robots Selection Tab -->\n  <div class=\"row\">\n    <div id=\"lineup\">\n      <div>\n        <h1>Robots</h1>\n        <hr>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"input-group\">\n          <br>\n          <table>\n            <tr>\n              <!-- User Options -->\n              <td width=\"250px\">\n                <label>User</label>\n                <select class=\"form-control\" multiple name=\"domain_name\" id=\"domain_name\"\n                        [(ngModel)]=\"selectedUsers\"\n                        (ngModelChange)=\"userChanges($event)\">\n                  <option *ngFor=\"let user of userOptions\" [value]=\"user\">{{user}}</option>\n                </select>\n              </td>\n\n              <!-- Package Options -->\n              <td width=\"250px\">\n                <label>Package</label>\n                <select class=\"form-control\" multiple name=\"package\" id=\"package\"\n                        [(ngModel)]=\"selectedPackage\"\n                        (ngModelChange)=\"packageChange($event)\">\n                  <option *ngFor=\"let package of packageOptions\" [value]=\"package\">{{package}}</option>\n                </select>\n              </td>\n\n\n              <!-- Robot Options -->\n              <td width=\"250px\">\n                <label>Robots</label>\n                <select class=\"form-control\" multiple name=\"displayed-robots\"\n                        [(ngModel)]=\"selectedRobots\">\n                  <option *ngFor=\"let r of robotOptions\" [ngValue]=\"r\">{{r.robotId}}</option>\n                </select>\n\n              </td>\n              <td width=\"100px\" align=\"center\">\n                <button type=\"button\" (click)=\"addToChosen()\">Add</button>\n              </td>\n              <td width=\"250px\">\n                <label>Selected Robots</label>\n                <select class=\"form-control\" multiple name=\"selected-robots\"\n                        (ngModelChange)=\"selectedRobotsChange($event)\">\n                  <option *ngFor=\"let r of addedRobots\" [ngValue]=\"r\">{{r.robotId}}</option>\n                </select>\n              </td>\n            </tr>\n          </table>\n        </div>\n      </div>\n    </div>\n\n  </div>\n\n\n  <!-- Battle Properties Option Tab -->\n  <div class=\"row\">\n    <div id=\"rules\">\n      <div>\n        <h1>Rules</h1>\n        <hr>\n      </div>\n\n      <table>\n        <tr>\n          <td>\n            Number of Rounds: <br> (integer > 0)\n          </td>\n          <td>\n            <input type=\"text\" name=\"numRounds\" value=\"10\">\n          </td>\n        </tr>\n        <tr>\n          <td width=\"200px\">Gun Cooling Rate: <br> (>0 and <=0.7)</td>\n          <td>\n            <input type=\"text\" name=\"gunCool\" id=\"gunCool\" value=\"0.1\"></td>\n        </tr>\n        <tr>\n          <td>\n            Inactivity Time: <br> (integer >= 0)\n          </td>\n          <td><input type=\"text\" name=\"inactivity\" value=\"450\"></td>\n        </tr>\n        <tr>\n          <td>\n            Sentry Border Size: <br> (integer >= 50)\n          </td>\n          <td><input type=\"text\" name=\"sentryBorder\" id=\"sentryBorder\" value=\"100\"></td>\n        </tr>\n        <tr>\n          <td>\n            Hide Enemy Names:\n          </td>\n          <td><input type=\"checkbox\" name=\"enemy\" value=\"enemy\"></td>\n        </tr>\n      </table>\n    </div>\n  </div>\n</div>\n\n\n<div class=\"container\">\n  <div id=\"page-wrapper\">\n    <div class=\"row\">\n      <div class=\"col-lg-12\">\n        <h1 class=\"page-header\">\n          <i class=\"fa fa-play\"></i>\n          <button type=\"button\"\n                  [disabled]=\"addedRobots == null || addedRobots.length == 0\"\n                  name=\"battlebutton\" id=\"battlebutton\"\n                  (click)=\"startBattle()\">Play Battle\n          </button>\n        </h1>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -410,7 +410,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/robocode/create/create.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>New Robot</h2>\n\n<form #robotForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n  <div class=\"form-group\">\n    <label for=\"user-name\">Select User</label>\n    <select class=\"form-control\" id=\"user-name\" name=\"user-name\"\n            #selectUserElem\n            required\n            [(ngModel)]=\"userName\"\n            (change)=\"onSelectUser(selectUserElem.value)\">\n      <option value=\"\">Select User</option>\n      <option *ngFor=\"let user of users\" [value]=\"user\">{{user}}</option>\n    </select>\n  </div>\n\n\n  <div class=\"form-group\">\n    <label for=\"package-name\">Select Package</label>\n    <select class=\"form-control\" id=\"package-name\" name=\"package-name\"\n            required\n            #selectPackageElem\n            [(ngModel)]=\"packageName\">\n      <option value=\"\">Select Package</option>\n      <option *ngFor=\"let package of packages\" [value]=\"package\">{{package}}</option>\n    </select>\n  </div>\n\n\n  <div class=\"form-group\" >\n    <p>Enter Robot Name</p>\n    <p>Example: MyFirstRobot. Must not contain spaces.</p>\n    <label>Robot Name</label>\n    <input class=\"form-control\" type=\"text\"\n           name=\"robot_name\" placeholder=\"Please enter a robot name\"\n           required\n           [(ngModel)]=\"robotName\" >\n  </div>\n\n  <div class=\"form-group\">\n    <button class=\"btn btn-success\" type=\"submit\" [disabled]=\"!robotForm.form.valid\">Next</button>\n  </div>\n\n</form>\n"
+module.exports = "<div class=\"container\">\n\n\n  <h2>New Robot</h2>\n\n  <form #robotForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n    <div class=\"form-group\">\n      <label for=\"user-name\">Select User</label>\n      <select class=\"form-control\" id=\"user-name\" name=\"user-name\"\n              #selectUserElem\n              required\n              [(ngModel)]=\"userName\"\n              (change)=\"onSelectUser(selectUserElem.value)\">\n        <option value=\"\">Select User</option>\n        <option *ngFor=\"let user of users\" [value]=\"user\">{{user}}</option>\n      </select>\n    </div>\n\n\n    <div class=\"form-group\">\n      <label for=\"package-name\">Select Package</label>\n      <select class=\"form-control\" id=\"package-name\" name=\"package-name\"\n              required\n              #selectPackageElem\n              [(ngModel)]=\"packageName\">\n        <option value=\"\">Select Package</option>\n        <option *ngFor=\"let package of packages\" [value]=\"package\">{{package}}</option>\n      </select>\n    </div>\n\n\n    <div class=\"form-group\">\n      <p>Enter Robot Name</p>\n      <p>Example: MyFirstRobot. Must not contain spaces.</p>\n      <label>Robot Name</label>\n      <input class=\"form-control\" type=\"text\"\n             name=\"robot_name\" placeholder=\"Please enter a robot name\"\n             required\n             [(ngModel)]=\"robotName\">\n    </div>\n\n    <div class=\"form-group\">\n      <button class=\"btn btn-success\" type=\"submit\" [disabled]=\"!robotForm.form.valid\">Next</button>\n    </div>\n\n  </form>\n\n</div>\n"
 
 /***/ }),
 
@@ -525,7 +525,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/robocode/editor/editor.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>View and Edit Robot</h2>\n\n<form #robotForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n  <div class=\"form-group\">\n    <label for=\"user-name\">Select User</label>\n    <select class=\"form-control\" id=\"user-name\" name=\"user-name\"\n            #selectUserElem\n            required\n            [(ngModel)]=\"userName\"\n            (change)=\"onSelectUser(selectUserElem.value)\">\n      <option value=\"\">Select User</option>\n      <option *ngFor=\"let user of users\" [value]=\"user\">{{user}}</option>\n    </select>\n  </div>\n\n\n  <div class=\"form-group\">\n    <label for=\"package-name\">Select Package</label>\n    <select class=\"form-control\" id=\"package-name\" name=\"package-name\"\n            required\n            #selectPackageElem\n            [(ngModel)]=\"packageName\">\n      <option value=\"\">Select Package</option>\n      <option *ngFor=\"let package of packages\" [value]=\"package\">{{package}}</option>\n    </select>\n  </div>\n\n\n  <div class=\"form-group\" >\n    <p>Enter Robot Name</p>\n    <p>Example: MyFirstRobot. Must not contain spaces.</p>\n    <label>Robot Name</label>\n    <input class=\"form-control\" type=\"text\"\n           name=\"robot_name\" placeholder=\"Please enter a robot name\"\n           required\n           [(ngModel)]=\"robotName\" >\n  </div>\n\n  <div class=\"form-group\">\n    <button class=\"btn btn-success\" type=\"submit\" [disabled]=\"!robotForm.form.valid\">Next</button>\n  </div>\n\n</form>\n"
+module.exports = "<div class=\"container\">\n\n  <h2>View and Edit Robot</h2>\n\n  <form #robotForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n    <div class=\"form-group\">\n      <label for=\"user-name\">Select User</label>\n      <select class=\"form-control\" id=\"user-name\" name=\"user-name\"\n              required\n              [(ngModel)]=\"selectedUsers\"\n              (ngModelChange)=\"userChanges($event)\">\n        <option value=\"\">Select User</option>\n        <option *ngFor=\"let user of userOptions\" [value]=\"user\">{{user}}</option>\n      </select>\n    </div>\n\n\n    <div class=\"form-group\">\n      <label for=\"package-name\">Select Package</label>\n      <select class=\"form-control\" id=\"package-name\" name=\"package-name\"\n              required\n              [(ngModel)]=\"selectedPackage\"\n              (ngModelChange)=\"packageChange($event)\">\n        <option value=\"\">Select Package</option>\n        <option *ngFor=\"let package of packageOptions\" [value]=\"package\">{{package}}</option>\n      </select>\n    </div>\n\n    <div class=\"form-group\">\n      <label for=\"package-name\">Select Package</label>\n      <select class=\"form-control\" id=\"robot-name\" name=\"robot-name\"\n              required\n              [(ngModel)]=\"selectedRobots\"\n              (ngModelChange)=\"robotChange($event)\">\n        <option [value]=\"null\">Select Package</option>\n        <option *ngFor=\"let r of robotOptions\" [ngValue]=\"r\" >{{r.robotId}}</option>\n\n      </select>\n    </div>\n\n    <div class=\"form-group\">\n      <button class=\"btn btn-success\" type=\"submit\" [disabled]=\"!robotForm.form.valid\">Next</button>\n    </div>\n\n  </form>\n\n</div>\n"
 
 /***/ }),
 
@@ -536,10 +536,9 @@ module.exports = "<h2>View and Edit Robot</h2>\n\n<form #robotForm=\"ngForm\" (n
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditorComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__robocode_service__ = __webpack_require__("../../../../../src/app/robocode/robocode.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__robot_model__ = __webpack_require__("../../../../../src/app/robocode/robot.model.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_underscore__ = __webpack_require__("../../../../underscore/underscore.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_underscore__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_underscore__ = __webpack_require__("../../../../underscore/underscore.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_underscore__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -553,49 +552,59 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var EditorComponent = (function () {
     function EditorComponent(robocodeService, router) {
         this.robocodeService = robocodeService;
         this.router = router;
+        this.allRobots = [];
+        this.userOptions = [];
+        this.selectedUsers = "";
+        this.packageOptions = [];
+        this.selectedPackage = "";
+        this.robotOptions = [];
+        this.selectedRobots = null;
     }
     EditorComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.robocodeService.getAllRobots().subscribe(function (data) {
-            _this.viewModel = new __WEBPACK_IMPORTED_MODULE_2__robot_model__["c" /* RobotViewModel */]();
-            _this.viewModel.domains = [];
-            _this.domainMap = {};
-            data.forEach(function (value) {
-                var userId = value.userID;
-                var packageId = value.packageID;
-                if (_this.domainMap[userId] != null) {
-                    _this.domainMap[userId].packages.push(packageId);
-                }
-                else {
-                    _this.domainMap[userId] = {};
-                    _this.domainMap[userId].name = userId;
-                    _this.domainMap[userId].packages = [packageId];
-                }
+            _this.allRobots = data;
+            var userOptionsUnique = [];
+            _this.allRobots.forEach(function (robot) {
+                userOptionsUnique.push(robot.userId);
             });
-            _this.viewModel.domains = [];
-            _this.users = [];
-            Object.keys(_this.domainMap).forEach(function (key) {
-                _this.domainMap[key].packages = __WEBPACK_IMPORTED_MODULE_4_underscore__["uniq"](_this.domainMap[key].packages);
-                var domain = new __WEBPACK_IMPORTED_MODULE_2__robot_model__["a" /* Domain */](_this.domainMap[key].name, _this.domainMap[key].packages);
-                _this.viewModel.domains.push(domain);
-                _this.users.push(_this.domainMap[key].name);
-            });
+            userOptionsUnique = __WEBPACK_IMPORTED_MODULE_3_underscore__["uniq"](userOptionsUnique);
+            _this.userOptions = userOptionsUnique;
         });
     };
-    /**
-     *
-     * @param {String} value
-     */
-    EditorComponent.prototype.onSelectUser = function (value) {
-        this.packages = this.domainMap[value].packages;
+    EditorComponent.prototype.userChanges = function (newUsers) {
+        console.log(newUsers);
+        var packageOptionsRaw = [];
+        this.allRobots.forEach(function (robot) {
+            if (newUsers == robot.userId) {
+                packageOptionsRaw.push(robot.packageId);
+            }
+        });
+        var packageOptionsUnique = __WEBPACK_IMPORTED_MODULE_3_underscore__["uniq"](packageOptionsRaw);
+        this.packageOptions = packageOptionsUnique;
+    };
+    EditorComponent.prototype.packageChange = function (newObj) {
+        var _this = this;
+        console.log(newObj);
+        this.robotOptions = __WEBPACK_IMPORTED_MODULE_3_underscore__["filter"](this.allRobots, function (r) {
+            if (_this.selectedUsers == r.userId && _this.selectedPackage == r.packageId) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    };
+    EditorComponent.prototype.robotChange = function (newRobot) {
+        console.log(newRobot);
+        console.log(this.robotOptions);
     };
     EditorComponent.prototype.onSubmit = function () {
-        this.router.navigate(["robocode/edit/new", this.packageName, this.robotName]);
+        this.router.navigate(["robocode/edit", this.selectedRobots.id]);
     };
     return EditorComponent;
 }());
@@ -606,7 +615,7 @@ EditorComponent = __decorate([
         styles: [__webpack_require__("../../../../../src/app/robocode/editor/editor.component.css")],
         encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewEncapsulation"].None,
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], EditorComponent);
 
 var _a, _b;
@@ -622,7 +631,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".CodeMirror  {\r\n  border: 1px solid #eee !important;\r\n  height: 100% !important;\r\n}\r\n\r\n\r\n", ""]);
 
 // exports
 
@@ -635,7 +644,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/robocode/editor/legacy-robot/legacy-robot.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <div class=\"form-group\">\n    <button type=\"button\" (click)=\"saveRobot()\" [disabled]=\"isSubmit\" >Save Robot</button>\n  </div>\n  <div>\n    <label>{{responseMessage}}</label>\n  </div>\n  <div>\n    <codemirror [(ngModel)]=\"content\" [config]=\"config\"></codemirror>\n  </div>\n\n</div>\n\n\n"
+module.exports = "<div class=\"container\">\n  <div class=\"form-group\">\n    <button type=\"button\" (click)=\"saveRobot()\" [disabled]=\"isSubmit\" >Save Robot</button>\n  </div>\n\n\n  <div class=\"form-group\">\n    <button type=\"button\" (click)=\"compileRobot()\" [disabled]=\"isSubmit\" >Compile Robot</button>\n  </div>\n\n\n  <div>\n    <label>{{responseMessage}}</label>\n  </div>\n  <div>\n    <codemirror [(ngModel)]=\"content\" [config]=\"config\"></codemirror>\n  </div>\n\n</div>\n\n\n"
 
 /***/ }),
 
@@ -681,15 +690,22 @@ var LegacyRobotComponent = (function () {
         this.id = this.route.snapshot.paramMap.get('id');
         this.robocodeService.getRobotById(this.id).subscribe(function (data) {
             _this.robot = new __WEBPACK_IMPORTED_MODULE_1__robot_model__["b" /* Robot */](data);
+            _this.content = _this.robot.robotSrcCode;
         });
-        this.content = this.robot.robotSrcCode;
     };
     LegacyRobotComponent.prototype.saveRobot = function () {
         var _this = this;
-        this.isSubmit = true;
         this.robot.robotSrcCode = this.content;
+        this.responseMessage = "";
         this.robocodeService.saveLegacyRobot(this.robot).subscribe(function (res) {
-            _this.responseMessage = res;
+            _this.responseMessage = res.response;
+        });
+    };
+    LegacyRobotComponent.prototype.compileRobot = function () {
+        var _this = this;
+        this.responseMessage = "";
+        this.robocodeService.compileRobot(this.robot).subscribe(function (res) {
+            _this.responseMessage = res.response;
         });
     };
     return LegacyRobotComponent;
@@ -698,7 +714,8 @@ LegacyRobotComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-legacy-robot',
         template: __webpack_require__("../../../../../src/app/robocode/editor/legacy-robot/legacy-robot.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/robocode/editor/legacy-robot/legacy-robot.component.css")]
+        styles: [__webpack_require__("../../../../../src/app/robocode/editor/legacy-robot/legacy-robot.component.css")],
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewEncapsulation"].None
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
 ], LegacyRobotComponent);
@@ -785,7 +802,7 @@ var NewRobotComponent = (function () {
         newRobot.robotId = this.robotId;
         newRobot.robotSrcCode = this.content;
         this.robocodeService.saveNewRobot(newRobot).subscribe(function (res) {
-            _this.responseMessage = res;
+            _this.responseMessage = res.response;
         });
     };
     return NewRobotComponent;
@@ -910,7 +927,14 @@ RobocodeModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__angular_forms__["FormsModule"],
             __WEBPACK_IMPORTED_MODULE_7_ng2_codemirror__["CodemirrorModule"]
         ],
-        declarations: [__WEBPACK_IMPORTED_MODULE_5__robocode_component__["a" /* RobocodeComponent */], __WEBPACK_IMPORTED_MODULE_2__create_create_component__["a" /* CreateComponent */], __WEBPACK_IMPORTED_MODULE_3__editor_editor_component__["a" /* EditorComponent */], __WEBPACK_IMPORTED_MODULE_4__battle_battle_component__["a" /* BattleComponent */], __WEBPACK_IMPORTED_MODULE_8__editor_new_robot_new_robot_component__["a" /* NewRobotComponent */], __WEBPACK_IMPORTED_MODULE_9__editor_legacy_robot_legacy_robot_component__["a" /* LegacyRobotComponent */]]
+        declarations: [
+            __WEBPACK_IMPORTED_MODULE_5__robocode_component__["a" /* RobocodeComponent */],
+            __WEBPACK_IMPORTED_MODULE_2__create_create_component__["a" /* CreateComponent */],
+            __WEBPACK_IMPORTED_MODULE_3__editor_editor_component__["a" /* EditorComponent */],
+            __WEBPACK_IMPORTED_MODULE_4__battle_battle_component__["a" /* BattleComponent */],
+            __WEBPACK_IMPORTED_MODULE_8__editor_new_robot_new_robot_component__["a" /* NewRobotComponent */],
+            __WEBPACK_IMPORTED_MODULE_9__editor_legacy_robot_legacy_robot_component__["a" /* LegacyRobotComponent */]
+        ]
     })
 ], RobocodeModule);
 
@@ -982,6 +1006,10 @@ var RobocodeService = (function () {
     };
     RobocodeService.prototype.playBattle = function (robotList) {
         return this.http.post(this.baseUrl + 'battle/init', robotList)
+            .map(function (res) { return res.json(); });
+    };
+    RobocodeService.prototype.compileRobot = function (robot) {
+        return this.http.get(this.baseUrl + 'robot/' + robot.id + "/compile")
             .map(function (res) { return res.json(); });
     };
     RobocodeService.prototype.generateRobotStub = function (packageName, robotName) {

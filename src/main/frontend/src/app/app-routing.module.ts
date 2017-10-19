@@ -13,7 +13,7 @@ import {LegacyRobotComponent} from "./robocode/editor/legacy-robot/legacy-robot.
 const appRoutes: Routes = [
   { path: 'robocode', component: RobocodeComponent },
   { path: 'robocode/create', component: CreateComponent },
-  { path: 'robocode/edit/', component: EditorComponent },
+  { path: 'robocode/edit', component: EditorComponent },
   { path: 'robocode/edit/:id', component: LegacyRobotComponent },
   { path: 'robocode/edit/new/:package/:robotName', component: NewRobotComponent },
   { path: 'robocode/battle', component: BattleComponent },
