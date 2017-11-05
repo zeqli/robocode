@@ -9,7 +9,7 @@
     <packaging>war</packaging>
 
     <name>robocode</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Robocode</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -123,6 +123,11 @@
                     <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
     </dependencies>
