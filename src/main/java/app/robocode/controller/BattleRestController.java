@@ -19,7 +19,8 @@ public class BattleRestController extends BaseController{
     @RequestMapping(value = "api/v1/robocode/battle/init", method = RequestMethod.POST)
     public Map<String, Object> battleInitialize(@RequestBody List<Robot> robotList, HttpServletRequest request) {
         log.debug("RobotsBattleController --> battleInitialize() ");
-        String baseUrl = "http://" + request.getServerName() + ":" +request.getLocalPort();
+//        String baseUrl = "http://" + request.getServerName() + ":" +request.getLocalPort();
+        String baseUrl = "http://" + request.getServerName();
 
 
 
