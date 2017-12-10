@@ -1,0 +1,9 @@
+---
+applications:
+- name: RobocodeB2
+  memory: 1000MB
+  instances: 1
+  buildpack: java_buildpack
+  path: ./robo-spring-boot-cloud.war
+services:
+- mysql
