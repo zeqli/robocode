@@ -1,10 +1,9 @@
 package app.dao.idao;
 
-import java.util.List;
-
+import app.dao.entity.UserGroup;
 import org.springframework.stereotype.Service;
 
-import app.dao.entity.UserGroup;
+import java.util.List;
 
 @Service
 public interface IUserGroupDAO {

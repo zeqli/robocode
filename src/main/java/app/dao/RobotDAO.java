@@ -96,4 +96,9 @@ public class RobotDAO implements IRobotDAO {
         return res;
     }
 
+    @Override
+    public List<Robot> findByUserIdAndGroupId(String uid, String gid) {
+        return robotRepository.findByUserIdAndGroupId(uid, gid);
+    }
+
 }

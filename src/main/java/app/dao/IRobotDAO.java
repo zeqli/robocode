@@ -18,4 +18,6 @@ public interface IRobotDAO {
     List<Robot> findByPackageIdAndRobotId(String packageId, String robotId);
     List<DomainInfo> getAllDomainInformation();
 
+    List<Robot> findByUserIdAndGroupId(String userId, String groupId);
+
 }

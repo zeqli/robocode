@@ -17,4 +17,6 @@ public interface RobotRepository extends JpaRepository<Robot, Long> {
 
     @Query(value = FIND_DOMAIN_INFO, nativeQuery = true)
     List<Object[]> getAllDomainInformation();
+
+    List<Robot> findByUserIdAndGroupId(String uid, String gid);
 }

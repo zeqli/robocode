@@ -54,9 +54,12 @@ public class Robot implements Serializable{
     @JsonIgnore
     private byte[] blob;
 
+    @Column(name = "groupId")
+    private String groupId;
+
     public Robot() {}
 
-    public Robot(String userId, String packageId, String robotId, String access, String filePath, String createdDate, String updatedDate, String robotSrcCode, byte[] blob) {
+    public Robot(String userId, String packageId, String robotId, String access, String filePath, String createdDate, String updatedDate, String robotSrcCode, byte[] blob, String groupId) {
         this.userId = userId;
         this.packageId = packageId;
         this.robotId = robotId;
@@ -66,6 +69,7 @@ public class Robot implements Serializable{
         this.updatedDate = updatedDate;
         this.robotSrcCode = robotSrcCode;
         this.blob = blob;
+        this.groupId = groupId;
     }
 
     public Robot(String packageId, String robotId, String access, String robotSrcCode) {
@@ -155,6 +159,14 @@ public class Robot implements Serializable{
         this.blob = blob;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     public String toString() {
         return "Robot{" +
@@ -167,7 +179,8 @@ public class Robot implements Serializable{
                 ", createdDate='" + createdDate + '\'' +
                 ", updatedDate='" + updatedDate + '\'' +
                 ", robotSrcCode='" + robotSrcCode + '\'' +
-                ", blob=" + Arrays.toString(blob) +
+                ", blob=" + Arrays.toString(blob) + '\'' +
+                ", groupId" + groupId +
                 '}';
     }
 }

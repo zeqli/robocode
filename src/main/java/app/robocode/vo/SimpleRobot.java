@@ -6,6 +6,7 @@ public class SimpleRobot implements Serializable {
 
     private static final long serialVersionId = 1L;
 
+    private String userId;
     private String packageId;
     private String robotId;
     private String access;
@@ -18,6 +19,14 @@ public class SimpleRobot implements Serializable {
         this.robotId = robotId;
         this.access = access;
         this.robotSrcCode = robotSrcCode;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPackageId() {

@@ -26,6 +26,7 @@ export class Domain {
 
 
 export class SimpleRobot {
+  userId;
   packageId;
   robotId;
   access;

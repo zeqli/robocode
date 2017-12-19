@@ -1,39 +1,15 @@
 package app.authentication.controller;
 
 
-import app.dao.entity.Access;
-import app.dao.entity.GroupRole;
-import app.dao.entity.GroupRoleMap;
-import app.dao.entity.Groups;
-import app.dao.entity.Role;
-import app.dao.entity.RoleAccess;
-import app.dao.entity.UserGroup;
-import app.dao.entity.UserRole;
-import app.dao.entity.Users;
-import app.dao.idao.IAccessDAO;
-import app.dao.idao.IGroupRole;
-import app.dao.idao.IGroupRoleMapDAO;
-import app.dao.idao.IGroupsDAO;
-import app.dao.idao.IRoleAccessDAO;
-import app.dao.idao.IRoleDAO;
-import app.dao.idao.IUserGroupDAO;
-import app.dao.idao.IUserRoleDAO;
-import app.dao.idao.IUsersDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import app.base.BaseController;
-import org.springframework.stereotype.Controller;
+import app.dao.entity.*;
+import app.dao.idao.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
 public class HomeController extends BaseController {
@@ -69,6 +45,7 @@ public class HomeController extends BaseController {
     public String home() {
         return "Greetings from Spring Boot!";
     }
+
 
     @RequestMapping(value ="/access/{id}", method = RequestMethod.GET, produces = "application/json")
     public Access getAccessById(@PathVariable String id){
@@ -137,7 +114,7 @@ public class HomeController extends BaseController {
     	return response;
     }
     
-    @RequestMapping(value = "/user/list", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = {"/user/list", "/api/v1/users"}, method = RequestMethod.GET, produces = "application/json")
     public List<Users> getAllUserInfo() {
     	List<Users> response = null;
     	response = usersDAO.getAllUser();
@@ -773,4 +750,6 @@ public class HomeController extends BaseController {
         mav.setViewName("../static/index");
         return mav;
     }
+
+
 }

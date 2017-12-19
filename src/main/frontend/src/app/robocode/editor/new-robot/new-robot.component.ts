@@ -2,6 +2,8 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {RobotModel, SimpleRobot} from "../../robot.model";
 import {RobocodeService} from "../../robocode.service";
 import {ActivatedRoute} from "@angular/router";
+import {User} from "../../../shared/models/user";
+import {Constant} from "../../../shared/constant";
 
 @Component({
   selector: 'app-new-robot',
@@ -28,6 +30,7 @@ export class NewRobotComponent implements OnInit {
 
   isSubmit: boolean = false;
 
+  currentUser: User;
 
   constructor(
     private robocodeService: RobocodeService,
@@ -35,6 +38,7 @@ export class NewRobotComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem(Constant.PRINCIPAL));
     this.config = {
       lineNumbers: true,
       mode: 'text/x-java',
@@ -63,6 +67,7 @@ export class NewRobotComponent implements OnInit {
     newRobot.access = 'Y';
     newRobot.robotId = this.robotId;
     newRobot.robotSrcCode = this.content;
+    newRobot.userId = this.currentUser.username;
 
     this.robocodeService.saveNewRobot(newRobot).subscribe(res => {
       this.responseMessage = res.response;

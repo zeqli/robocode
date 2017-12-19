@@ -1,15 +1,13 @@
 package app.dao;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import app.dao.entity.UserGroup;
 import app.dao.idao.IUserGroupDAO;
 import app.dao.repo.UserGroupRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Repository
 public class UserGroupDAO implements IUserGroupDAO {
