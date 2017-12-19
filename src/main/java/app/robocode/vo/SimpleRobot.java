@@ -11,14 +11,16 @@ public class SimpleRobot implements Serializable {
     private String robotId;
     private String access;
     private String robotSrcCode;
+    private Integer groupId;
 
     public SimpleRobot() {};
 
-    public SimpleRobot(String packageId, String robotId, String access, String robotSrcCode) {
+    public SimpleRobot(String packageId, String robotId, String access, String robotSrcCode, Integer groupId) {
         this.packageId = packageId;
         this.robotId = robotId;
         this.access = access;
         this.robotSrcCode = robotSrcCode;
+        this.groupId = groupId;
     }
 
     public String getUserId() {
@@ -59,5 +61,13 @@ public class SimpleRobot implements Serializable {
 
     public void setRobotSrcCode(String robotSrcCode) {
         this.robotSrcCode = robotSrcCode;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }

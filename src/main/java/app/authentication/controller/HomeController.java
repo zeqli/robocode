@@ -1,6 +1,7 @@
 package app.authentication.controller;
 
 
+import app.authentication.servicce.AccessInfoService;
 import app.base.BaseController;
 import app.dao.entity.*;
 import app.dao.idao.*;
@@ -40,6 +41,9 @@ public class HomeController extends BaseController {
     
     @Autowired
     private IGroupRoleMapDAO groupRoleMapDAO;
+
+    @Autowired
+    private AccessInfoService accessInfoService;
 
     @RequestMapping("/")
     public String home() {
@@ -120,31 +124,7 @@ public class HomeController extends BaseController {
     	response = usersDAO.getAllUser();
     	return response;
     }
-    
-    @RequestMapping(value = "/group/{id}", method = RequestMethod.GET, produces = "application/json")
-    public Groups getGroupById(@PathVariable String id) {
-    	Long idL = null;
-    	Groups response = null;
-    	
-    	try {
-    		idL = Long.parseLong(id);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	
-    	if (idL != null) {
-    		response = groupsDAO.getGroupById(idL);
-    	}
-    	
-    	return response;
-    }
-    
-    @RequestMapping(value = "/group/list", method = RequestMethod.GET, produces = "application/json")
-    public List<Groups> getAllGroupInfo() {
-    	List<Groups> response = null;
-    	response = groupsDAO.getAllGroup();
-    	return response;
-    }
+
     
     @RequestMapping(value = "/role_access/{id}", method = RequestMethod.GET, produces = "application/json")
     public RoleAccess getRoleAccessById(@PathVariable String id) {
@@ -213,6 +193,25 @@ public class HomeController extends BaseController {
     	
     	return response;
     }
+
+
+    @RequestMapping(value = "/user_group/user/{id}", method = RequestMethod.GET, produces = "application/json")
+    public UserGroup getUserGroupByUserId(@PathVariable String id) {
+        Long idL = null;
+        UserGroup response = null;
+
+        try {
+            idL = Long.parseLong(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (idL != null) {
+            response = userGroupDAO.getUserGroupById(idL);
+        }
+
+        return response;
+    }
     
     @RequestMapping(value = "/user_group/list", method = RequestMethod.GET, produces = "application/json")
     public List<UserGroup> getAllUserGroupInfo() {
@@ -280,16 +279,7 @@ public class HomeController extends BaseController {
         response = accessDAO.insertAccess(newAccess);
         return response;
     }
-    
-    @RequestMapping(value = "/group/new/{name}", method = RequestMethod.POST, produces = "application/json")
-    public Groups createGroup(@PathVariable String name){
-        Groups response = null;
-        
-        Groups newGroup = new Groups();
-        newGroup.setName(name);
-        response = groupsDAO.insertGroup(newGroup);
-        return response;
-    }
+
     
     @RequestMapping(value = "/role/new/{name}", method = RequestMethod.POST, produces = "application/json")
     public Role createRole(@PathVariable String name){
@@ -398,7 +388,7 @@ public class HomeController extends BaseController {
         	e.printStackTrace();
         }
         
-        roleAccess.setRole_id(rID);
+        roleAccess.setRoleId(rID);
         roleAccess.setAccess(accessDAO.getAccessById(aID));
         response = roleAccessDAO.insertRoleAccess(roleAccess);
         
@@ -425,7 +415,7 @@ public class HomeController extends BaseController {
         }
 
         userGroup.setGroups(groupsDAO.getGroupById(gID));
-        userGroup.setUsr_id(uID);
+        userGroup.setUid(uID);
         response = userGroupDAO.insertUserGroup(userGroup);
         
         return response;
@@ -450,7 +440,7 @@ public class HomeController extends BaseController {
         	e.printStackTrace();
         }
         
-        userRole.setUsr_id(uID);
+        userRole.setUid(uID);
         userRole.setRole(roleDAO.getRoleById(rID));
         response = userRoleDAO.insertUserRole(userRole);
         
@@ -502,27 +492,7 @@ public class HomeController extends BaseController {
     	return updatedRole;
     }
     
-    @RequestMapping(value = "/group/update/{id}/{name}", method = RequestMethod.PUT, produces = "application/json")
-    public Groups UpdateGroupById(@PathVariable String id, @PathVariable String name) {
-    	Long idL = null;
-    	Groups response = null;
-    	
-    	try {
-    		idL = Long.parseLong(id);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	
-    	if (idL != null) {
-    		response = groupsDAO.getGroupById(idL);
-    	}
-    	Groups updatedGroup = null;
-    	if (response != null) {
-    		response.setName(name);
-    		updatedGroup = groupsDAO.insertGroup(response);
-    	}
-    	return updatedGroup;
-    }
+
     
     @RequestMapping(value = "/user/update/{id}/{UserID}", method = RequestMethod.PUT, produces = "application/json")
     public Users UpdateUserById(@PathVariable String id, @PathVariable String UserID) {
@@ -663,7 +633,7 @@ public class HomeController extends BaseController {
         	e.printStackTrace();
         }
         
-        roleAccess.setRole_id(rID);
+        roleAccess.setRoleId(rID);
         roleAccess.setAccess(accessDAO.getAccessById(aID));
         response = roleAccessDAO.insertRoleAccess(roleAccess);
         
@@ -700,7 +670,7 @@ public class HomeController extends BaseController {
         }
 
         userGroup.setGroups(groupsDAO.getGroupById(gID));
-        userGroup.setUsr_id(uID);
+        userGroup.setUid(uID);
         response = userGroupDAO.insertUserGroup(userGroup);
         
         return response;
@@ -735,7 +705,7 @@ public class HomeController extends BaseController {
         	e.printStackTrace();
         }
         
-        userRole.setUsr_id(uID);
+        userRole.setUid(uID);
         userRole.setRole(roleDAO.getRoleById(rID));
         response = userRoleDAO.insertUserRole(userRole);
         

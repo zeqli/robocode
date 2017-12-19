@@ -22,6 +22,7 @@ import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import {GlobalEventsManagerService} from "./shared/global-events-manager.service";
 import { WelcomeComponent } from './shared/welcome/welcome.component';
+import {UserInfoService} from "./shared/userinfo.service";
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { WelcomeComponent } from './shared/welcome/welcome.component';
     AuthenticationService,
     UserService,
     RobocodeService,
+    UserInfoService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,

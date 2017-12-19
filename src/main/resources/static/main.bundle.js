@@ -177,12 +177,14 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__shared_navbar_navbar_component__ = __webpack_require__("../../../../../src/app/shared/navbar/navbar.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__shared_global_events_manager_service__ = __webpack_require__("../../../../../src/app/shared/global-events-manager.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__shared_welcome_welcome_component__ = __webpack_require__("../../../../../src/app/shared/welcome/welcome.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__shared_userinfo_service__ = __webpack_require__("../../../../../src/app/shared/userinfo.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -239,6 +241,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_14__shared_authentication_service__["a" /* AuthenticationService */],
             __WEBPACK_IMPORTED_MODULE_15__shared_user_service__["a" /* UserService */],
             __WEBPACK_IMPORTED_MODULE_9__robocode_robocode_service__["a" /* RobocodeService */],
+            __WEBPACK_IMPORTED_MODULE_23__shared_userinfo_service__["a" /* UserInfoService */],
             {
                 provide: __WEBPACK_IMPORTED_MODULE_16__angular_common_http__["a" /* HTTP_INTERCEPTORS */],
                 useClass: __WEBPACK_IMPORTED_MODULE_17__shared_jwt_interceptor__["a" /* JwtInterceptor */],
@@ -373,7 +376,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--<div>-->\n\n  <!--<ul>-->\n    <!--<li><a routerLink=\"/robocode\">Robocode Home</a></li>-->\n    <!--<li><a routerLink=\"/robocode/create\">Create Robot</a></li>-->\n    <!--<li><a routerLink=\"/robocode/edit\">Robot Editor</a></li>-->\n    <!--<li><a routerLink=\"/robocode/battle\">Play Battle</a></li>-->\n  <!--</ul>-->\n<!--</div>-->\n<div class=\"col-md-6 col-md-offset-3\">\n  <h1>Hi {{currentUser.username}}!</h1>\n  <p>You're logged in with Angular 2!!</p>\n  <h3>All registered users:</h3>\n  <ul>\n    <li *ngFor=\"let user of users\">\n      {{user.username}}\n      - <a (click)=\"deleteUser(user.id)\">Delete</a>\n    </li>\n  </ul>\n  <p><a [routerLink]=\"['/login']\">Logout</a></p>\n</div>\n"
+module.exports = "<!--<div>-->\n\n  <!--<ul>-->\n    <!--<li><a routerLink=\"/robocode\">Robocode Home</a></li>-->\n    <!--<li><a routerLink=\"/robocode/create\">Create Robot</a></li>-->\n    <!--<li><a routerLink=\"/robocode/edit\">Robot Editor</a></li>-->\n    <!--<li><a routerLink=\"/robocode/battle\">Play Battle</a></li>-->\n  <!--</ul>-->\n<!--</div>-->\n<div class=\"col-md-6 col-md-offset-3\">\n  <h1>Hi {{currentUser.username}} (Group {{currentUser.token.group.name}})!</h1>\n  <p>You're logged in Robocode !!</p>\n  <h3>All registered users:</h3>\n  <ul>\n    <li *ngFor=\"let user of users\">\n      {{user.username}}\n    </li>\n  </ul>\n  <p><a [routerLink]=\"['/login']\">Logout</a></p>\n</div>\n"
 
 /***/ }),
 
@@ -633,6 +636,8 @@ module.exports = "<div id=\"battle-panel\" class=\"container\">\n  <!-- Robots S
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__robocode_service__ = __webpack_require__("../../../../../src/app/robocode/robocode.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_underscore__ = __webpack_require__("../../../../underscore/underscore.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_underscore__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__ = __webpack_require__("../../../../../src/app/shared/userinfo.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_constant__ = __webpack_require__("../../../../../src/app/shared/constant.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -646,10 +651,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var BattleComponent = (function () {
-    function BattleComponent(router, robocodeService) {
+    function BattleComponent(router, robocodeService, userInfoService) {
         this.router = router;
         this.robocodeService = robocodeService;
+        this.userInfoService = userInfoService;
+        this.hasPermission = true;
+        this.hasRobotPlay = false;
         this.allRobots = [];
         this.userOptions = [];
         this.selectedUsers = [];
@@ -661,21 +671,46 @@ var BattleComponent = (function () {
     }
     BattleComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.currentUser = this.userInfoService.getCurrentUser();
+        // Admin cannot play
+        if (this.currentUser.username.toUpperCase() == 'ADMIN') {
+            this.hasPermission = false;
+        }
+        if (localStorage.getItem(__WEBPACK_IMPORTED_MODULE_5__shared_constant__["a" /* Constant */].ACCESS)) {
+            var access = JSON.parse(localStorage.getItem(__WEBPACK_IMPORTED_MODULE_5__shared_constant__["a" /* Constant */].ACCESS));
+            access.forEach(function (ac) {
+                if (ac.name.toUpperCase() == 'Robot_Play'.toUpperCase()) {
+                    _this.hasRobotPlay = true;
+                }
+            });
+        }
+        else {
+            console.log("Missing access on create ");
+        }
+        if (!this.hasPermission) {
+            this.router.navigate(['/dashboard']);
+            return;
+        }
         this.robocodeService.getAllRobots().subscribe(function (data) {
             _this.allRobots = data;
             var userOptionsUnique = [];
             _this.allRobots.forEach(function (robot) {
-                userOptionsUnique.push(robot.userId);
+                if ((robot.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                    && robot.groupId == _this.currentUser.token.group.id) || _this.hasRobotPlay) {
+                    userOptionsUnique.push(robot.userId);
+                }
             });
             userOptionsUnique = __WEBPACK_IMPORTED_MODULE_3_underscore__["uniq"](userOptionsUnique);
             _this.userOptions = userOptionsUnique;
         });
     };
     BattleComponent.prototype.userChanges = function (newUsers) {
+        var _this = this;
         console.log(newUsers);
         var packageOptionsRaw = [];
         this.allRobots.forEach(function (robot) {
-            if (newUsers.indexOf(robot.userId) > -1) {
+            if (newUsers.indexOf(robot.userId) > -1 && ((robot.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                && robot.groupId == _this.currentUser.token.group.id) || _this.hasRobotPlay)) {
                 packageOptionsRaw.push(robot.packageId);
             }
         });
@@ -686,7 +721,9 @@ var BattleComponent = (function () {
         var _this = this;
         console.log(newObj);
         this.robotOptions = __WEBPACK_IMPORTED_MODULE_3_underscore__["filter"](this.allRobots, function (r) {
-            if (_this.selectedUsers.indexOf(r.userId) > -1 && _this.selectedPackage.indexOf(r.packageId) > -1) {
+            if (_this.selectedUsers.indexOf(r.userId) > -1 && _this.selectedPackage.indexOf(r.packageId) > -1 &&
+                ((r.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                    && r.groupId == _this.currentUser.token.group.id) || _this.hasRobotPlay)) {
                 return true;
             }
             else {
@@ -723,10 +760,10 @@ BattleComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/robocode/battle/battle.component.html"),
         styles: [__webpack_require__("../../../../../src/app/robocode/battle/battle.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__["a" /* UserInfoService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__["a" /* UserInfoService */]) === "function" && _c || Object])
 ], BattleComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=battle.component.js.map
 
 /***/ }),
@@ -752,7 +789,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/robocode/create/create.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n\n\n  <h2>New Robot</h2>\n\n  <form #robotForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n    <div class=\"form-group\">\n      <label for=\"user-name\">Select User</label>\n      <select class=\"form-control\" id=\"user-name\" name=\"user-name\"\n              #selectUserElem\n              required\n              [(ngModel)]=\"userName\"\n              (change)=\"onSelectUser(selectUserElem.value)\">\n        <option value=\"\">Select User</option>\n        <option *ngFor=\"let user of users\" [value]=\"user\">{{user}}</option>\n      </select>\n    </div>\n\n\n    <div class=\"form-group\">\n      <label for=\"package-name\">Select Package</label>\n      <select class=\"form-control\" id=\"package-name\" name=\"package-name\"\n              required\n              #selectPackageElem\n              [(ngModel)]=\"packageName\">\n        <option value=\"\">Select Package</option>\n        <option *ngFor=\"let package of packages\" [value]=\"package\">{{package}}</option>\n      </select>\n    </div>\n\n\n    <div class=\"form-group\">\n      <p>Enter Robot Name</p>\n      <p>Example: MyFirstRobot. Must not contain spaces.</p>\n      <label>Robot Name</label>\n      <input class=\"form-control\" type=\"text\"\n             name=\"robot_name\" placeholder=\"Please enter a robot name\"\n             required\n             [(ngModel)]=\"robotName\">\n    </div>\n\n    <div class=\"form-group\">\n      <button class=\"btn btn-success\" type=\"submit\" [disabled]=\"!robotForm.form.valid\">Next</button>\n    </div>\n\n  </form>\n\n</div>\n"
+module.exports = "<div class=\"container\">\n\n\n  <h2>New Robot</h2>\n\n  <div *ngIf=\"!hasPermission\">\n    <label>Robot_Write access needed to view this page. </label>\n  </div>\n\n  <div *ngIf=\"hasPermission\">\n    <form #robotForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n      <div class=\"form-group\">\n        <label for=\"user-name\">Select User</label>\n        <select class=\"form-control\" id=\"user-name\" name=\"user-name\"\n                #selectUserElem\n                required\n                [(ngModel)]=\"userName\"\n                (change)=\"onSelectUser(selectUserElem.value)\">\n          <option value=\"\">Select User</option>\n          <option *ngFor=\"let user of users\" [value]=\"user\">{{user}}</option>\n        </select>\n      </div>\n\n\n      <div class=\"form-group\">\n        <label for=\"package-name\">Select Package</label>\n        <select class=\"form-control\" id=\"package-name\" name=\"package-name\"\n                required\n                #selectPackageElem\n                [(ngModel)]=\"packageName\">\n          <option value=\"\">Select Package</option>\n          <option *ngFor=\"let package of packages\" [value]=\"package\">{{package}}</option>\n        </select>\n      </div>\n\n\n      <div class=\"form-group\">\n        <p>Enter Robot Name</p>\n        <p>Example: MyFirstRobot. Must not contain spaces.</p>\n        <label>Robot Name</label>\n        <input class=\"form-control\" type=\"text\"\n               name=\"robot_name\" placeholder=\"Please enter a robot name\"\n               required\n               [(ngModel)]=\"robotName\">\n      </div>\n\n      <div class=\"form-group\">\n        <button class=\"btn btn-success\" type=\"submit\" [disabled]=\"!robotForm.form.valid\">Next</button>\n      </div>\n\n    </form>\n  </div>\n\n\n\n</div>\n"
 
 /***/ }),
 
@@ -771,6 +808,8 @@ module.exports = "<div class=\"container\">\n\n\n  <h2>New Robot</h2>\n\n  <form
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__robot_model__ = __webpack_require__("../../../../../src/app/robocode/robot.model.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_underscore__ = __webpack_require__("../../../../underscore/underscore.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_underscore__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_constant__ = __webpack_require__("../../../../../src/app/shared/constant.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_userinfo_service__ = __webpack_require__("../../../../../src/app/shared/userinfo.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -787,27 +826,55 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var CreateComponent = (function () {
-    function CreateComponent(robocodeService, router) {
+    function CreateComponent(robocodeService, router, userInfoService) {
         this.robocodeService = robocodeService;
         this.router = router;
+        this.userInfoService = userInfoService;
+        this.hasPermission = true;
+        this.hasRobotWrite = false;
     }
     CreateComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.currentUser = this.userInfoService.getCurrentUser();
+        if (this.currentUser.username.toUpperCase() == 'ADMIN') {
+            this.hasPermission = false;
+        }
+        if (localStorage.getItem(__WEBPACK_IMPORTED_MODULE_7__shared_constant__["a" /* Constant */].ACCESS)) {
+            var access = JSON.parse(localStorage.getItem(__WEBPACK_IMPORTED_MODULE_7__shared_constant__["a" /* Constant */].ACCESS));
+            access.forEach(function (ac) {
+                if (ac.name.toUpperCase() == 'Robot_Write'.toUpperCase()) {
+                    _this.hasRobotWrite = true;
+                }
+            });
+        }
+        else {
+            console.log("Missing access on create ");
+        }
+        if (!this.hasPermission) {
+            this.router.navigate(['/dashboard']);
+            return;
+        }
         this.robocodeService.getRobotDomainInfo().subscribe(function (data) {
             _this.viewModel = new __WEBPACK_IMPORTED_MODULE_5__robot_model__["c" /* RobotViewModel */]();
             _this.viewModel.domains = [];
             _this.domainMap = {};
             data.forEach(function (value) {
                 var userId = value.userID;
-                var packageId = value.packageID;
-                if (_this.domainMap[userId] != null) {
-                    _this.domainMap[userId].packages.push(packageId);
-                }
-                else {
-                    _this.domainMap[userId] = {};
-                    _this.domainMap[userId].name = userId;
-                    _this.domainMap[userId].packages = [packageId];
+                // Robot owner and Robot_Write can see.
+                if ((userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                    && value.groupID == _this.currentUser.token.group.id) || _this.hasRobotWrite) {
+                    var packageId = value.packageID;
+                    if (_this.domainMap[userId] != null) {
+                        _this.domainMap[userId].packages.push(packageId);
+                    }
+                    else {
+                        _this.domainMap[userId] = {};
+                        _this.domainMap[userId].name = userId;
+                        _this.domainMap[userId].packages = [packageId];
+                    }
                 }
             });
             _this.viewModel.domains = [];
@@ -838,10 +905,10 @@ CreateComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/robocode/create/create.component.html"),
         styles: [__webpack_require__("../../../../../src/app/robocode/create/create.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_8__shared_userinfo_service__["a" /* UserInfoService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__shared_userinfo_service__["a" /* UserInfoService */]) === "function" && _c || Object])
 ], CreateComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=create.component.js.map
 
 /***/ }),
@@ -881,6 +948,8 @@ module.exports = "<div class=\"container\">\n\n  <h2>View and Edit Robot</h2>\n\
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_underscore__ = __webpack_require__("../../../../underscore/underscore.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_underscore___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_underscore__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__ = __webpack_require__("../../../../../src/app/shared/userinfo.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_constant__ = __webpack_require__("../../../../../src/app/shared/constant.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -894,10 +963,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var EditorComponent = (function () {
-    function EditorComponent(robocodeService, router) {
+    function EditorComponent(robocodeService, router, userInfoService) {
         this.robocodeService = robocodeService;
         this.router = router;
+        this.userInfoService = userInfoService;
+        this.hasPermission = true;
+        this.hasRobotRead = false;
         this.allRobots = [];
         this.userOptions = [];
         this.selectedUsers = "";
@@ -908,22 +982,45 @@ var EditorComponent = (function () {
     }
     EditorComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.currentUser = this.userInfoService.getCurrentUser();
+        if (localStorage.getItem(__WEBPACK_IMPORTED_MODULE_5__shared_constant__["a" /* Constant */].ACCESS)) {
+            var access = JSON.parse(localStorage.getItem(__WEBPACK_IMPORTED_MODULE_5__shared_constant__["a" /* Constant */].ACCESS));
+            access.forEach(function (ac) {
+                if (ac.name.toUpperCase() == 'Robot_Read'.toUpperCase()) {
+                    _this.hasRobotRead = true;
+                }
+            });
+        }
+        else {
+            console.log("Missing access on editor ");
+        }
+        if (!this.hasPermission) {
+            this.router.navigate(['/dashboard']);
+            return;
+        }
         this.robocodeService.getAllRobots().subscribe(function (data) {
             _this.allRobots = data;
             var userOptionsUnique = [];
             _this.allRobots.forEach(function (robot) {
-                userOptionsUnique.push(robot.userId);
+                if ((robot.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                    && robot.groupId == _this.currentUser.token.group.id) || _this.hasRobotRead) {
+                    userOptionsUnique.push(robot.userId);
+                }
             });
             userOptionsUnique = __WEBPACK_IMPORTED_MODULE_3_underscore__["uniq"](userOptionsUnique);
             _this.userOptions = userOptionsUnique;
         });
     };
     EditorComponent.prototype.userChanges = function (newUsers) {
+        var _this = this;
         console.log(newUsers);
         var packageOptionsRaw = [];
         this.allRobots.forEach(function (robot) {
             if (newUsers == robot.userId) {
-                packageOptionsRaw.push(robot.packageId);
+                if ((robot.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                    && robot.groupId == _this.currentUser.token.group.id) || _this.hasRobotRead) {
+                    packageOptionsRaw.push(robot.packageId);
+                }
             }
         });
         var packageOptionsUnique = __WEBPACK_IMPORTED_MODULE_3_underscore__["uniq"](packageOptionsRaw);
@@ -933,7 +1030,8 @@ var EditorComponent = (function () {
         var _this = this;
         console.log(newObj);
         this.robotOptions = __WEBPACK_IMPORTED_MODULE_3_underscore__["filter"](this.allRobots, function (r) {
-            if (_this.selectedUsers == r.userId && _this.selectedPackage == r.packageId) {
+            if (_this.selectedUsers == r.userId && _this.selectedPackage == r.packageId && ((r.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                && r.groupId == _this.currentUser.token.group.id) || _this.hasRobotRead)) {
                 return true;
             }
             else {
@@ -957,10 +1055,10 @@ EditorComponent = __decorate([
         styles: [__webpack_require__("../../../../../src/app/robocode/editor/editor.component.css")],
         encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewEncapsulation"].None,
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__["a" /* UserInfoService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__["a" /* UserInfoService */]) === "function" && _c || Object])
 ], EditorComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=editor.component.js.map
 
 /***/ }),
@@ -999,6 +1097,8 @@ module.exports = "<div class=\"container\">\n  <div class=\"form-group\">\n    <
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__robot_model__ = __webpack_require__("../../../../../src/app/robocode/robot.model.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__robocode_service__ = __webpack_require__("../../../../../src/app/robocode/robocode.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__ = __webpack_require__("../../../../../src/app/shared/userinfo.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_constant__ = __webpack_require__("../../../../../src/app/shared/constant.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1012,14 +1112,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var LegacyRobotComponent = (function () {
-    function LegacyRobotComponent(robocodeService, route) {
+    function LegacyRobotComponent(robocodeService, route, userInfoService, router) {
         this.robocodeService = robocodeService;
         this.route = route;
+        this.userInfoService = userInfoService;
+        this.router = router;
         this.isSubmit = false;
+        this.hasRobotUpdate = false;
     }
     LegacyRobotComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.currentUser = this.userInfoService.getCurrentUser();
+        if (localStorage.getItem(__WEBPACK_IMPORTED_MODULE_5__shared_constant__["a" /* Constant */].ACCESS)) {
+            var access = JSON.parse(localStorage.getItem(__WEBPACK_IMPORTED_MODULE_5__shared_constant__["a" /* Constant */].ACCESS));
+            access.forEach(function (ac) {
+                if (ac.name.toUpperCase() == 'Robot_Update'.toUpperCase()) {
+                    _this.hasRobotUpdate = true;
+                }
+            });
+        }
+        else {
+            console.log("Missing access on editor ");
+        }
         this.config = {
             lineNumbers: true,
             mode: 'text/x-java',
@@ -1032,6 +1149,11 @@ var LegacyRobotComponent = (function () {
         this.id = this.route.snapshot.paramMap.get('id');
         this.robocodeService.getRobotById(this.id).subscribe(function (data) {
             _this.robot = new __WEBPACK_IMPORTED_MODULE_1__robot_model__["b" /* Robot */](data);
+            if (!_this.hasRobotUpdate || !((_this.robot.userId.toUpperCase() == _this.currentUser.username.toUpperCase()
+                && _this.robot.groupId == _this.currentUser.token.group.id))) {
+                _this.router.navigate(['/dashboard']);
+                return;
+            }
             _this.content = _this.robot.robotSrcCode;
         });
     };
@@ -1059,10 +1181,10 @@ LegacyRobotComponent = __decorate([
         styles: [__webpack_require__("../../../../../src/app/robocode/editor/legacy-robot/legacy-robot.component.css")],
         encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewEncapsulation"].None
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__robocode_service__["a" /* RobocodeService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__["a" /* UserInfoService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__shared_userinfo_service__["a" /* UserInfoService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _d || Object])
 ], LegacyRobotComponent);
 
-var _a, _b;
+var _a, _b, _c, _d;
 //# sourceMappingURL=legacy-robot.component.js.map
 
 /***/ }),
@@ -1422,6 +1544,7 @@ var Robot = (function () {
         this.createdDate = param.createdDate;
         this.updatedDate = param.updatedDate;
         this.robotSrcCode = param.robotSrcCode;
+        this.groupId = param.groupId;
     }
     return Robot;
 }());
@@ -1571,6 +1694,7 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant__ = __webpack_require__("../../../../../src/app/shared/constant.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__userinfo_service__ = __webpack_require__("../../../../../src/app/shared/userinfo.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1583,11 +1707,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AuthenticationService = (function () {
-    function AuthenticationService(http) {
+    function AuthenticationService(http, userInfoService) {
         this.http = http;
+        this.userInfoService = userInfoService;
     }
     AuthenticationService.prototype.login = function (username, password) {
+        var _this = this;
         return this.http.post('/api/authenticate', { username: username, password: password })
             .map(function (res) {
             if (!res || res.status != 'success') {
@@ -1600,21 +1727,31 @@ var AuthenticationService = (function () {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* Constant */].PRINCIPAL, JSON.stringify(user));
             }
+            // Retrieve access information.
+            var rids = [];
+            user.token.roles.forEach(function (role) { return rids.push(role.id); });
+            if (localStorage.getItem(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* Constant */].ACCESS)) {
+                return user;
+            }
+            _this.userInfoService.getAccessByRole(rids).subscribe(function (res) {
+                localStorage.setItem(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* Constant */].ACCESS, JSON.stringify(res));
+            });
             return user;
         });
     };
     AuthenticationService.prototype.logout = function () {
         // remove user from local storage to log user out
+        localStorage.removeItem(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* Constant */].ACCESS);
         localStorage.removeItem(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* Constant */].PRINCIPAL);
     };
     return AuthenticationService;
 }());
 AuthenticationService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__userinfo_service__["a" /* UserInfoService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__userinfo_service__["a" /* UserInfoService */]) === "function" && _b || Object])
 ], AuthenticationService);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=authentication.service.js.map
 
 /***/ }),
@@ -1631,6 +1768,7 @@ var Constant = (function () {
 }());
 
 Constant.PRINCIPAL = 'principal';
+Constant.ACCESS = 'access';
 //# sourceMappingURL=constant.js.map
 
 /***/ }),
@@ -1703,6 +1841,7 @@ var AuthGuard = (function () {
     AuthGuard.prototype.canActivate = function (next, state) {
         if (localStorage.getItem(__WEBPACK_IMPORTED_MODULE_3__constant__["a" /* Constant */].PRINCIPAL)) {
             // Logged in
+            var currentUser = JSON.parse(localStorage.getItem(__WEBPACK_IMPORTED_MODULE_3__constant__["a" /* Constant */].PRINCIPAL));
             this.globalEventsManager.showNavBar(true);
             return true;
         }
@@ -1767,6 +1906,8 @@ JwtInterceptor = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
 /* unused harmony export Token */
+/* unused harmony export Group */
+/* unused harmony export Role */
 var User = (function () {
     function User() {
         this.id = null;
@@ -1783,6 +1924,18 @@ var Token = (function () {
     function Token() {
     }
     return Token;
+}());
+
+var Group = (function () {
+    function Group() {
+    }
+    return Group;
+}());
+
+var Role = (function () {
+    function Role() {
+    }
+    return Role;
 }());
 
 //# sourceMappingURL=user.js.map
@@ -1903,6 +2056,51 @@ UserService = __decorate([
 
 var _a;
 //# sourceMappingURL=user.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/shared/userinfo.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserInfoService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant__ = __webpack_require__("../../../../../src/app/shared/constant.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var UserInfoService = (function () {
+    function UserInfoService(http) {
+        this.http = http;
+    }
+    UserInfoService.prototype.getAccessByRole = function (rids) {
+        if (rids === void 0) { rids = []; }
+        var body = {};
+        body['rids'] = rids;
+        return this.http.post('/api/accesses', body);
+    };
+    UserInfoService.prototype.getCurrentUser = function () {
+        return JSON.parse(localStorage.getItem(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* Constant */].PRINCIPAL));
+    };
+    return UserInfoService;
+}());
+UserInfoService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object])
+], UserInfoService);
+
+var _a;
+//# sourceMappingURL=userinfo.service.js.map
 
 /***/ }),
 

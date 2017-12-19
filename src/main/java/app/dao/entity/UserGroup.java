@@ -1,11 +1,9 @@
 package app.dao.entity;
 
-import java.sql.Date;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import java.sql.Date;
 
 @Entity
 @Table(name = "User_Group")
@@ -17,7 +15,7 @@ public class UserGroup {
     private Long id;
     
     @Column(name = "Usr_id")
-    private Long usr_id;
+    private Long uid;
     
     @ManyToOne
     @JoinColumn(name = "Group_id")
@@ -25,14 +23,10 @@ public class UserGroup {
     
     @CreationTimestamp
     @Column(name = "create_time")
-    private Date create_time;
+    private Date createTime;
 
 	public Long getId() {
 		return id;
-	}
-
-	public Long getUsr_id() {
-		return usr_id;
 	}
 
 
@@ -44,22 +38,23 @@ public class UserGroup {
 		this.groups = groups;
 	}
 
-	public Date getCreate_time() {
-		return create_time;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public void setUsr_id(Long usr_id) {
-		this.usr_id = usr_id;
+	public Long getUid() {
+		return uid;
 	}
 
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
+	public void setUid(Long uid) {
+		this.uid = uid;
 	}
-    
 
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 }

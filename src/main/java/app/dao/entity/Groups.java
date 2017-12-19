@@ -1,10 +1,8 @@
 package app.dao.entity;
-import java.sql.Date;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import java.sql.Date;
 
 @Entity
 @Table(name = "Groups")
@@ -44,6 +42,14 @@ public class Groups {
 
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
+	}
+
+	public static Groups defaultGroup() {
+		Groups ng = new Groups();
+		ng.setId(0L);
+		ng.setName("Default");
+		ng.setCreate_time(Date.valueOf("2017-12-19"));
+		return ng;
 	}
     
 }

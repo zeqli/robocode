@@ -3,6 +3,9 @@ import {Router} from "@angular/router";
 import {Robot} from "../robot.model";
 import {RobocodeService} from "../robocode.service";
 import * as _ from 'underscore';
+import {User} from "../../shared/models/user";
+import {UserInfoService} from "../../shared/userinfo.service";
+import {Constant} from "../../shared/constant";
 
 @Component({
   selector: 'app-battle',
@@ -23,9 +26,16 @@ export class BattleComponent implements OnInit {
   selectedRobots: Robot[];
   addedRobots: Robot[];
 
+  hasPermission: boolean = true;
+
+  hasRobotPlay: boolean = false;
+
+  currentUser: User;
+
   constructor(
     private router: Router,
-    private robocodeService: RobocodeService
+    private robocodeService: RobocodeService,
+    private userInfoService: UserInfoService
   ) {
     this.allRobots = [];
 
@@ -41,12 +51,41 @@ export class BattleComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.currentUser = this.userInfoService.getCurrentUser();
+    // Admin cannot play
+    if (this.currentUser.username.toUpperCase() == 'ADMIN') {
+      this.hasPermission = false;
+    }
+
+
+    if (localStorage.getItem(Constant.ACCESS)) {
+      let access = JSON.parse(localStorage.getItem(Constant.ACCESS));
+      access.forEach(ac => {
+        if (ac.name.toUpperCase() == 'Robot_Play'.toUpperCase()) {
+          this.hasRobotPlay = true;
+        }
+      })
+    } else{
+      console.log("Missing access on create ")
+    }
+
+    if (!this.hasPermission) {
+      this.router.navigate(['/dashboard']);
+      return;
+    }
+
     this.robocodeService.getAllRobots().subscribe(data => {
       this.allRobots = data;
 
       let userOptionsUnique = [];
       this.allRobots.forEach(robot => {
-        userOptionsUnique.push(robot.userId);
+
+        if ((robot.userId.toUpperCase() == this.currentUser.username.toUpperCase()
+            && robot.groupId == this.currentUser.token.group.id) || this.hasRobotPlay) {
+          userOptionsUnique.push(robot.userId);
+        }
+
       });
       userOptionsUnique = _.uniq(userOptionsUnique);
       this.userOptions = userOptionsUnique;
@@ -58,7 +97,9 @@ export class BattleComponent implements OnInit {
 
     let packageOptionsRaw = [];
     this.allRobots.forEach(robot => {
-      if (newUsers.indexOf(robot.userId) > -1) {
+      if (newUsers.indexOf(robot.userId) > -1 && ((robot.userId.toUpperCase() == this.currentUser.username.toUpperCase()
+          && robot.groupId == this.currentUser.token.group.id) || this.hasRobotPlay)) {
+
         packageOptionsRaw.push(robot.packageId);
       }
     });
@@ -72,7 +113,9 @@ export class BattleComponent implements OnInit {
     console.log(newObj);
 
     this.robotOptions = _.filter(this.allRobots, (r) => {
-      if (this.selectedUsers.indexOf(r.userId) > -1 && this.selectedPackage.indexOf(r.packageId) > -1) {
+      if (this.selectedUsers.indexOf(r.userId) > -1 && this.selectedPackage.indexOf(r.packageId) > -1 &&
+        ((r.userId.toUpperCase() == this.currentUser.username.toUpperCase()
+          && r.groupId == this.currentUser.token.group.id) || this.hasRobotPlay)) {
         return true;
       } else {
         return false;

@@ -43,6 +43,7 @@ export class Robot {
   createdDate;
   updatedDate;
   robotSrcCode;
+  groupId;
 
   constructor(param) {
     this.id = param.id;
@@ -54,5 +55,6 @@ export class Robot {
     this.createdDate = param.createdDate;
     this.updatedDate = param.updatedDate;
     this.robotSrcCode = param.robotSrcCode;
+    this.groupId = param.groupId;
   }
 }

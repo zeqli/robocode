@@ -1,11 +1,9 @@
 package app.dao.entity;
 
-import java.sql.Date;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import java.sql.Date;
 
 
 @Entity
@@ -18,7 +16,7 @@ public class UserRole {
     private Long id;
     
     @Column(name = "usr_id", nullable = false)
-    private Long usr_id;
+    private Long uid;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -30,10 +28,6 @@ public class UserRole {
 
 	public Long getId() {
 		return id;
-	}
-
-	public Long getUsr_id() {
-		return usr_id;
 	}
 
 	public Role getRole() {
@@ -48,9 +42,6 @@ public class UserRole {
 		this.id = id;
 	}
 
-	public void setUsr_id(Long usr_id) {
-		this.usr_id = usr_id;
-	}
 
 	public void setRole(Role role) {
 		this.role = role;
@@ -59,5 +50,13 @@ public class UserRole {
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
-    
+
+
+	public Long getUid() {
+		return uid;
+	}
+
+	public void setUid(Long uid) {
+		this.uid = uid;
+	}
 }

@@ -1,34 +1,48 @@
 package app.authentication;
 
+import app.dao.entity.Groups;
+import app.dao.entity.Role;
+
 import java.util.List;
 
 public class JwtToken {
     // Private role
-    private List<String> roles;
+    private List<Role> roles;
 
-    private String group;
+    private Groups group;
 
-    public JwtToken(List<String> roles, String group) {
+    private List<Groups> groups;
+
+    public JwtToken(List<Role> roles, Groups group, List<Groups> groups) {
         this.roles = roles;
         this.group = group;
+        this.groups = groups;
     }
 
     public JwtToken() {
     }
 
-    public List<String> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
-    public String getGroup() {
+    public Groups getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(Groups group) {
         this.group = group;
+    }
+
+    public List<Groups> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Groups> groups) {
+        this.groups = groups;
     }
 }

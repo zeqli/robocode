@@ -35,7 +35,14 @@ public class RobotsController extends BaseController{
 
     @RequestMapping(value = "api/v1/robocode/robot/new/save", method = RequestMethod.POST)
     public Map<String, Object> saveNewRobot(@RequestBody SimpleRobot robot) {
-        Robot robotDto = new Robot(robot.getPackageId(), robot.getRobotId(), robot.getAccess(), robot.getRobotSrcCode());
+        Robot robotDto =
+                new Robot(
+                        robot.getPackageId(),
+                        robot.getRobotId(),
+                        robot.getAccess(),
+                        robot.getRobotSrcCode(),
+                        robot.getGroupId()
+                );
         robotDto.setUserId(robot.getUserId());
         robotDto.setFilePath("C:/robocode/robots/" + robot.getPackageId() + "/" + robot.getRobotId() + ".java");
         robotDto.setCreatedDate(DateUtil.getDateNowAsString());

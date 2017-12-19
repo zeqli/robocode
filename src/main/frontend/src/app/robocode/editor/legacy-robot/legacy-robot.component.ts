@@ -1,7 +1,10 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Robot, RobotModel, SimpleRobot} from "../../robot.model";
 import {RobocodeService} from "../../robocode.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {UserInfoService} from "../../../shared/userinfo.service";
+import {Constant} from "../../../shared/constant";
+import {User} from "../../../shared/models/user";
 
 @Component({
   selector: 'app-legacy-robot',
@@ -26,13 +29,33 @@ export class LegacyRobotComponent implements OnInit {
 
   isSubmit: boolean = false;
 
+  currentUser: User;
+
+  hasRobotUpdate: boolean = false;
 
   constructor(
     private robocodeService: RobocodeService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userInfoService: UserInfoService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
+    this.currentUser = this.userInfoService.getCurrentUser();
+
+    if (localStorage.getItem(Constant.ACCESS)) {
+      let access = JSON.parse(localStorage.getItem(Constant.ACCESS));
+      access.forEach(ac => {
+        if (ac.name.toUpperCase() == 'Robot_Update'.toUpperCase()) {
+          this.hasRobotUpdate = true;
+        }
+      })
+    } else{
+      console.log("Missing access on editor ")
+    }
+
+
+
     this.config = {
       lineNumbers: true,
       mode: 'text/x-java',
@@ -49,6 +72,14 @@ export class LegacyRobotComponent implements OnInit {
 
     this.robocodeService.getRobotById(this.id).subscribe(data => {
       this.robot = new Robot(data);
+
+
+      if (!this.hasRobotUpdate || !((this.robot.userId.toUpperCase() == this.currentUser.username.toUpperCase()
+          && this.robot.groupId == this.currentUser.token.group.id))) {
+        this.router.navigate(['/dashboard']);
+        return;
+      }
+
       this.content = this.robot.robotSrcCode;
     });
 

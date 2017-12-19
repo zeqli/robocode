@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public interface RobotRepository extends JpaRepository<Robot, Long> {
 
-    static final String FIND_DOMAIN_INFO = "SELECT userID as userId, packageID as packageId, robotID as robotId from robot";
+    static final String FIND_DOMAIN_INFO = "SELECT userID as userId, packageID as packageId, robotID as robotId, groupID as groupId from robot";
 
     Robot findByPackageId(String packageId);
     List<Robot> findByPackageIdAndRobotId(String packageId, String robotId);

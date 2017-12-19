@@ -5,6 +5,9 @@ import { Router} from "@angular/router";
 import 'rxjs/add/operator/switchMap';
 import {Domain, RobotViewModel} from "../robot.model";
 import * as _ from 'underscore';
+import {Constant} from "../../shared/constant";
+import {UserInfoService} from "../../shared/userinfo.service";
+import {User} from "../../shared/models/user";
 
 @Component({
   selector: 'app-create',
@@ -25,12 +28,38 @@ export class CreateComponent implements OnInit {
 
   domainMap: {};
 
+  hasPermission: boolean = true;
+
+  hasRobotWrite: boolean = false;
+
+  currentUser: User;
 
   constructor(
     private robocodeService: RobocodeService,
-    private router: Router) { }
+    private router: Router,
+    private userInfoService: UserInfoService) { }
 
   ngOnInit() {
+
+    this.currentUser = this.userInfoService.getCurrentUser();
+    if (this.currentUser.username.toUpperCase() == 'ADMIN') {
+      this.hasPermission = false;
+    }
+    if (localStorage.getItem(Constant.ACCESS)) {
+      let access = JSON.parse(localStorage.getItem(Constant.ACCESS));
+      access.forEach(ac => {
+        if (ac.name.toUpperCase() == 'Robot_Write'.toUpperCase()) {
+          this.hasRobotWrite = true;
+        }
+      })
+    } else{
+      console.log("Missing access on create ")
+    }
+
+    if (!this.hasPermission) {
+      this.router.navigate(['/dashboard']);
+      return;
+    }
 
 
     this.robocodeService.getRobotDomainInfo().subscribe(data => {
@@ -40,14 +69,22 @@ export class CreateComponent implements OnInit {
       this.domainMap = {};
       data.forEach(value => {
         let userId = value.userID;
-        let packageId: string = value.packageID;
-        if (this.domainMap[userId] != null) {
-          this.domainMap[userId].packages.push(packageId);
-        } else {
-          this.domainMap[userId] = {};
-          this.domainMap[userId].name = userId;
-          this.domainMap[userId].packages = [packageId];
+
+        // Robot owner and Robot_Write can see.
+        if ((userId.toUpperCase() == this.currentUser.username.toUpperCase()
+          && value.groupID == this.currentUser.token.group.id) || this.hasRobotWrite) {
+
+
+          let packageId: string = value.packageID;
+          if (this.domainMap[userId] != null) {
+            this.domainMap[userId].packages.push(packageId);
+          } else {
+            this.domainMap[userId] = {};
+            this.domainMap[userId].name = userId;
+            this.domainMap[userId].packages = [packageId];
+          }
         }
+
       });
 
       this.viewModel.domains = [];
@@ -72,5 +109,6 @@ export class CreateComponent implements OnInit {
   onSubmit() {
     this.router.navigate(["robocode/edit/new", this.packageName, this.robotName]);
   }
+
 }
 

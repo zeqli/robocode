@@ -61,6 +61,7 @@ public class RobotDAO implements IRobotDAO {
         updatedRobot.setUpdatedDate(DateUtil.getDateNowAsString());
         updatedRobot.setRobotSrcCode(robot.getRobotSrcCode());
         updatedRobot.setBlob(robot.getBlob());
+        updatedRobot.setGroupId(robot.getGroupId());
         robotRepository.save(updatedRobot);
         return updatedRobot;
     }
@@ -91,7 +92,8 @@ public class RobotDAO implements IRobotDAO {
             String userID = (String)result[0];
             String packageID = (String)result[1];
             String robotID = (String)result[2];
-            res.add(new DomainInfo(userID, packageID, robotID));
+            Integer groupID = (Integer)result[3];
+            res.add(new DomainInfo(userID, packageID, robotID, groupID));
         });
         return res;
     }

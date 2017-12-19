@@ -6,5 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AccessRepository extends JpaRepository<Access, Long> {
-    
+
+
 }

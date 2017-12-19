@@ -55,11 +55,11 @@ public class Robot implements Serializable{
     private byte[] blob;
 
     @Column(name = "groupId")
-    private String groupId;
+    private Integer groupId;
 
     public Robot() {}
 
-    public Robot(String userId, String packageId, String robotId, String access, String filePath, String createdDate, String updatedDate, String robotSrcCode, byte[] blob, String groupId) {
+    public Robot(String userId, String packageId, String robotId, String access, String filePath, String createdDate, String updatedDate, String robotSrcCode, byte[] blob, Integer groupId) {
         this.userId = userId;
         this.packageId = packageId;
         this.robotId = robotId;
@@ -72,11 +72,12 @@ public class Robot implements Serializable{
         this.groupId = groupId;
     }
 
-    public Robot(String packageId, String robotId, String access, String robotSrcCode) {
+    public Robot(String packageId, String robotId, String access, String robotSrcCode, Integer groupId) {
         this.packageId = packageId;
         this.robotId = robotId;
         this.access = access;
         this.robotSrcCode = robotSrcCode;
+        this.groupId = groupId;
     }
 
     public Long getId() {
@@ -159,11 +160,11 @@ public class Robot implements Serializable{
         this.blob = blob;
     }
 
-    public String getGroupId() {
+    public Integer getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
 

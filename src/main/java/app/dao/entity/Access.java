@@ -1,6 +1,7 @@
 package app.dao.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Access")
@@ -30,5 +31,9 @@ public class Access {
 		this.name = name;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
     
 }
