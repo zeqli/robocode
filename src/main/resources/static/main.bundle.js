@@ -512,7 +512,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".CodeMirror  {\r\n  border: 1px solid #eee !important;\r\n  height: 100% !important;\r\n}\r\n\r\n\r\n", ""]);
+exports.push([module.i, ".CodeMirror  {\n  border: 1px solid #eee !important;\n  height: 100% !important;\n}\n\n\n", ""]);
 
 // exports
 
@@ -631,7 +631,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".CodeMirror  {\r\n  border: 1px solid #eee !important;\r\n  height: 100% !important;\r\n}\r\n\r\n\r\n", ""]);
+exports.push([module.i, ".CodeMirror  {\n  border: 1px solid #eee !important;\n  height: 100% !important;\n}\n\n\n", ""]);
 
 // exports
 
@@ -733,7 +733,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".CodeMirror  {\r\n  border: 1px solid #eee !important;\r\n  height: 100% !important;\r\n}\r\n\r\n\r\n", ""]);
+exports.push([module.i, ".CodeMirror  {\n  border: 1px solid #eee !important;\n  height: 100% !important;\n}\n\n\n", ""]);
 
 // exports
 
